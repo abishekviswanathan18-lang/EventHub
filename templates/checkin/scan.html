@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Check-in - {{ event.title }}{% endblock %}
+
+{% block content %}
+    <div class="card" style="max-width:480px; margin:0 auto; padding:32px;">
+        <h2>Ticket Check-in</h2>
+        <p style="font-size:14px; margin-top:4px;">{{ event.title }}</p>
+
+        <form method="POST" style="margin-top:24px;">
+            {% csrf_token %}
+            <label>Ticket Number</label>
+            <input type="text" name="ticket_number" placeholder="Paste or scan ticket ID" autofocus required>
+            <button type="submit" class="btn btn-dark" style="width:100%; margin-top:14px;">Check In</button>
+        </form>
+
+        {% if result %}
+            <div style="margin-top:24px; padding:18px; border-radius:8px; text-align:center;
+                {% if result.status == 'success' %} background:#d1fae5;
+                {% elif result.status == 'already_used' %} background:#fee2e2;
+                {% elif result.status == 'wrong_event' %} background:#fee2e2;
+                {% else %} background:#f3f4f6; {% endif %}">
+
+                {% if result.status == 'success' %}
+                    <p style="font-size:20px; font-weight:700; color:#065f46;">✓ Valid — Checked In</p>
+                    <p style="margin-top:6px; font-size:14px; color:#065f46;">
+                        {{ result.ticket.booking_item.booking.user.username }} —
+                        {{ result.ticket.booking_item.ticket_type.name }}
+                    </p>
+                {% elif result.status == 'already_used' %}
+                    <p style="font-size:20px; font-weight:700; color:#991b1b;">❌ Already Checked In</p>
+                    <p style="margin-top:6px; font-size:14px; color:#991b1b;">
+                        This ticket was already scanned at {{ result.ticket.checked_in_at }}
+                    </p>
+                {% elif result.status == 'wrong_event' %}
+                    <p style="font-size:20px; font-weight:700; color:#991b1b;">❌ Wrong Event</p>
+                    <p style="margin-top:6px; font-size:14px; color:#991b1b;">This ticket is not for {{ event.title }}</p>
+                {% else %}
+                    <p style="font-size:20px; font-weight:700; color:#374151;">Ticket Not Found</p>
+                    <p style="margin-top:6px; font-size:14px; color:#6b7280;">Check the ticket number and try again</p>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

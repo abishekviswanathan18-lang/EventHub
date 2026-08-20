@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}My Bookings - EventHub{% endblock %}
+
+{% block content %}
+    <h1>My Bookings</h1>
+
+    <div style="margin-top:24px; display:flex; flex-direction:column; gap:12px;">
+        {% for booking in bookings %}
+            <a href="{% url 'booking_detail' booking.pk %}">
+                <div class="card" style="padding:18px 22px; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <h3>{{ booking.event.title }}</h3>
+                        <p style="font-size:14px; margin-top:6px;">📅 {{ booking.event.event_date }} &nbsp; ₹{{ booking.total_amount }}</p>
+                    </div>
+                    {% if booking.status == 'CANCELLED' %}
+                        <span class="badge badge-danger">{{ booking.status }}</span>
+                    {% else %}
+                        <span class="badge badge-success">{{ booking.status }}</span>
+                    {% endif %}
+                </div>
+            </a>
+        {% empty %}
+            <p>You haven't booked any events yet.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

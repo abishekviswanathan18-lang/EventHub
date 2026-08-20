@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}About Us - EventHub{% endblock %}
+
+{% block content %}
+    <div style="background:linear-gradient(135deg,#0f172a,#064e3b,#059669); border-radius:20px; padding:60px 40px; text-align:center; color:white;">
+        <h1 style="color:white; font-size:36px;">About EventHub</h1>
+        <p style="color:#a7f3d0; margin-top:14px; max-width:600px; margin-left:auto; margin-right:auto; font-size:16px;">
+            We're on a mission to make discovering and hosting events effortless — for everyone, everywhere.
+        </p>
+    </div>
+
+    <div style="max-width:800px; margin:56px auto 0;">
+        <h2>Our Story</h2>
+        <p style="margin-top:12px; line-height:1.8; color:#444;">
+            EventHub started with a simple idea: booking a ticket to a great event, or setting one up as an organizer, shouldn't be complicated. Whether it's a local tech meetup, a music festival, a sports tournament, or a hands-on workshop — we built a single platform where organizers can create and manage events with ease, and attendees can discover, book, and enjoy experiences that matter to them.
+        </p>
+        <p style="margin-top:16px; line-height:1.8; color:#444;">
+            From digital QR tickets to real-time seat availability, transparent refund tracking, and personalized recommendations — every feature on EventHub is built around one goal: making events accessible and enjoyable for everyone involved.
+        </p>
+    </div>
+
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:20px; margin-top:48px;">
+        <div class="stat-card" style="text-align:center;">
+            <div style="font-size:32px;">🎟️</div>
+            <p class="stat-value" style="margin-top:10px;">{{ total_events }}+</p>
+            <p class="stat-label">Events Hosted</p>
+        </div>
+        <div class="stat-card" style="text-align:center;">
+            <div style="font-size:32px;">👥</div>
+            <p class="stat-value" style="margin-top:10px;">1000+</p>
+            <p class="stat-label">Happy Attendees</p>
+        </div>
+        <div class="stat-card" style="text-align:center;">
+            <div style="font-size:32px;">🏙️</div>
+            <p class="stat-value" style="margin-top:10px;">{{ total_cities }}+</p>
+            <p class="stat-label">Cities Covered</p>
+        </div>
+    </div>
+
+    <div style="max-width:800px; margin:56px auto 0;">
+        <h2>What We Value</h2>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:20px; margin-top:20px;">
+            <div class="card" style="padding:24px;">
+                <div style="font-size:26px;">🔒</div>
+                <h3 style="margin-top:10px;">Trust & Transparency</h3>
+                <p style="margin-top:8px; font-size:14px; color:#666;">Clear pricing, honest refund policies, and secure ticketing you can rely on.</p>
+            </div>
+            <div class="card" style="padding:24px;">
+                <div style="font-size:26px;">⚡</div>
+                <h3 style="margin-top:10px;">Simplicity</h3>
+                <p style="margin-top:8px; font-size:14px; color:#666;">From booking to check-in, every step is designed to be fast and effortless.</p>
+            </div>
+            <div class="card" style="padding:24px;">
+                <div style="font-size:26px;">🌱</div>
+                <h3 style="margin-top:10px;">Community First</h3>
+                <p style="margin-top:8px; font-size:14px; color:#666;">We support organizers of every size, from first-timers to seasoned event pros.</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

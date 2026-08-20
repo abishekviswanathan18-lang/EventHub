@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+{% block title %}EventHub - Discover Events{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<div class="animated-hero"
+    style="margin: 20px -24px 40px; padding: 100px 24px 90px; text-align:center; border-radius: 20px; position:relative; overflow:hidden;">
+    <div class="floating-circle"
+        style="position:absolute; top:-60px; right:-60px; width:280px; height:280px; background:rgba(255,255,255,0.06); border-radius:50%;">
+    </div>
+    <div class="floating-circle-2"
+        style="position:absolute; bottom:-80px; left:-40px; width:220px; height:220px; background:rgba(255,255,255,0.05); border-radius:50%;">
+    </div>
+    <div class="floating-circle-3"
+        style="position:absolute; top:40%; left:10%; width:120px; height:120px; background:rgba(255,255,255,0.04); border-radius:50%;">
+    </div>
+
+
+    <style>
+        .animated-hero {
+            background: linear-gradient(-45deg, #0f172a, #064e3b, #059669, #0f172a);
+            background-size: 400% 400%;
+            animation: gradientShift 12s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .floating-circle {
+            animation: floatSlow 8s ease-in-out infinite;
+        }
+
+        .floating-circle-2 {
+            animation: floatSlow 10s ease-in-out infinite reverse;
+        }
+
+        .floating-circle-3 {
+            animation: floatSlow 7s ease-in-out infinite;
+        }
+
+        @keyframes floatSlow {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(15px, -20px);
+            }
+        }
+    </style>
+
+    <span
+        style="display:inline-block; background:rgba(255,255,255,0.12); color:#a7f3d0; padding:6px 16px; border-radius:20px; font-size:13px; font-weight:600; letter-spacing:0.5px;">🎟️
+        INDIA'S FASTEST GROWING EVENT PLATFORM</span>
+
+    <h1 style="font-size:52px; color:white; margin-top:22px; line-height:1.15;">Discover, Book &amp; Experience<br><span
+            style="background:linear-gradient(90deg,#6ee7b7,#a7f3d0); -webkit-background-clip:text; background-clip:text; color:transparent;">Unforgettable
+            Events</span></h1>
+    <p style="font-size:18px; margin-top:18px; color:#d1fae5;">Live concerts, tech meetups, sports, workshops — find
+        your next great night out.</p>
+
+    <form method="GET" action="{% url 'event_list' %}"
+        style="max-width:600px; margin:36px auto 0; display:flex; gap:10px; position:relative;">
+        <div style="flex:1; position:relative;">
+            <input type="text" id="home-search-input" name="q" placeholder="Search events, e.g. 'Python workshop'"
+                autocomplete="off"
+                style="width:100%; padding:16px 18px; font-size:15px; border-radius:10px; border:none;">
+            <div id="home-search-suggestions"
+                style="position:absolute; top:calc(100% + 6px); left:0; right:0; background:white; border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,0.25); z-index:20; display:none; overflow:hidden; text-align:left;">
+            </div>
+        </div>
+        <button type="submit" class="btn"
+            style="padding:16px 32px; font-size:15px; background:#facc15; color:#1a1a1a; font-weight:700; border-radius:10px;">Search
+            Events</button>
+    </form>
+
+    <div style="display:flex; justify-content:center; gap:48px; margin-top:56px; flex-wrap:wrap;">
+        <div>
+            <p style="font-size:30px; font-weight:800; color:white;">{{ total_events_count }}+</p>
+            <p style="font-size:13px; color:#a7f3d0;">Live Events</p>
+        </div>
+        <div>
+            <p style="font-size:30px; font-weight:800; color:white;">{{ total_tickets_count }}+</p>
+            <p style="font-size:13px; color:#a7f3d0;">Tickets Booked</p>
+        </div>
+        <div>
+            <p style="font-size:30px; font-weight:800; color:white;">{{ total_cities_count }}+</p>
+            <p style="font-size:13px; color:#a7f3d0;">Cities Covered</p>
+        </div>
+    </div>
+</div>
+
+<!-- Popular Categories -->
+<div style="margin-top:56px;">
+    <div style="display:flex; justify-content:space-between; align-items:baseline;">
+        <h2 style="font-size:26px;">Browse by Category</h2>
+        <p style="color:#999; font-size:14px;">Find events that match your vibe</p>
+    </div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:16px; margin-top:22px;">
+        {% for cat in categories %}
+        <a href="{% url 'event_list' %}?category={{ cat.id }}">
+            <div class="card"
+                style="padding:28px 14px; text-align:center; border:1px solid #f0f0f0; transition:all 0.2s;">
+                <div style="font-size:38px; filter:drop-shadow(0 4px 8px rgba(0,0,0,0.08));">{{ cat.icon }}</div>
+                <p style="margin-top:12px; font-weight:700; font-size:15px; color:#1a1a1a;">{{ cat.name }}</p>
+                <p style="margin-top:2px; font-size:12px; color:#999;">Explore →</p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Featured Events -->
+<div style="margin-top:56px;">
+    <div style="display:flex; justify-content:space-between; align-items:baseline;">
+        <div>
+            <h2 style="font-size:26px;">🔥 Trending Now</h2>
+            <p style="color:#999; font-size:14px; margin-top:2px;">Don't miss out on these upcoming events</p>
+        </div>
+        <a href="{% url 'event_list' %}"
+            style="color:#059669; font-weight:700; font-size:14px; white-space:nowrap;">View All →</a>
+    </div>
+
+    <div class="card-grid" style="margin-top:22px;">
+        {% for event in featured_events %}
+        <a href="{% url 'event_detail' event.pk %}">
+            <div class="card" style="position:relative;">
+                <span
+                    style="position:absolute; top:12px; left:12px; background:#facc15; color:#1a1a1a; font-size:11px; font-weight:800; padding:4px 10px; border-radius:6px; z-index:5;">🔥
+                    TRENDING</span>
+                {% if event.image %}
+                <img src="{{ event.image.url }}"
+                    style="width:100%; height:170px; object-fit:cover; object-position:center top; display:block;">
+                {% else %}
+                <div
+                    style="width:100%; height:170px; background:linear-gradient(135deg,#e0f2f1,#f0fdf9); display:flex; align-items:center; justify-content:center; color:#059669; font-size:32px;">
+                    🎫</div>
+                {% endif %}
+                <div class="card-body">
+                    <h3 style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ event.title }}</h3>
+                    <p style="font-size:13px; margin-top:8px; color:#888;">📅 {{ event.event_date }} &nbsp;•&nbsp; 📍 {{
+                        event.city }}</p>
+                </div>
+            </div>
+        </a>
+        {% empty %}
+        <p>No events yet — check back soon!</p>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% if user.is_authenticated and recommended_events %}
+<div style="margin-top:56px;">
+    <h2>Recommended for You</h2>
+    <p style="color:#888; font-size:14px; margin-top:4px;">Based on your interests</p>
+
+    <div class="card-grid" style="margin-top:20px;">
+        {% for event in recommended_events %}
+        <a href="{% url 'event_detail' event.pk %}">
+            <div class="card">
+                {% if event.image %}
+                <img src="{{ event.image.url }}" style="width:100%; height:160px; object-fit:cover; display:block;">
+                {% else %}
+                <div
+                    style="width:100%; height:160px; background:#f0f0f0; display:flex; align-items:center; justify-content:center; color:#bbb; font-size:14px;">
+                    No Image</div>
+                {% endif %}
+                <div class="card-body">
+                    {% if event.category %}
+                    <span class="badge badge-success" style="margin-bottom:8px; display:inline-block;">{{
+                        event.category.name }}</span>
+                    {% endif %}
+                    <h3>{{ event.title }}</h3>
+                    <p style="font-size:14px; margin-top:8px;">📅 {{ event.event_date }}</p>
+                    <p style="font-size:14px;">📍 {{ event.city }}</p>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+{% if not user.is_authenticated %}
+<div class="card" style="margin-top:56px; padding:40px; text-align:center; background:#f0fdf9;">
+    <h2>Ready to get started?</h2>
+    <p style="margin-top:8px;">Create an account to book tickets or start organizing your own events.</p>
+    <a href="{% url 'register' %}" class="btn btn-primary" style="margin-top:18px; padding:12px 28px;">Get Started
+        Free</a>
+</div>
+{% endif %}
+
+<script>
+    const homeSearchInput = document.getElementById('home-search-input');
+    const homeSuggestionsBox = document.getElementById('home-search-suggestions');
+    let homeDebounceTimer;
+
+    homeSearchInput.addEventListener('input', function () {
+        clearTimeout(homeDebounceTimer);
+        const query = this.value.trim();
+
+        if (query.length < 2) {
+            homeSuggestionsBox.style.display = 'none';
+            return;
+        }
+
+        homeDebounceTimer = setTimeout(() => {
+            fetch(`/events/search-suggestions/?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.results.length === 0) {
+                        homeSuggestionsBox.style.display = 'none';
+                        return;
+                    }
+                    homeSuggestionsBox.innerHTML = data.results.map(event => `
+                    <a href="/events/${event.id}/" style="display:block; padding:12px 16px; border-bottom:1px solid #f0f0f0; color:#1a1a1a; font-size:14px;">
+                        <strong>${event.title}</strong>
+                        <span style="color:#999; font-size:13px;"> — ${event.city}</span>
+                    </a>
+                `).join('');
+                    homeSuggestionsBox.style.display = 'block';
+                });
+        }, 250);
+    });
+
+    document.addEventListener('click', function (e) {
+        if (!e.target.closest('#home-search-input') && !e.target.closest('#home-search-suggestions')) {
+            homeSuggestionsBox.style.display = 'none';
+        }
+    });
+</script>
+
+{% endblock %}

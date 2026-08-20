@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}My Favorites - EventHub{% endblock %}
+
+{% block content %}
+    <h1>My Favorites</h1>
+
+    <div class="card-grid" style="margin-top:24px;">
+        {% for favorite in favorites %}
+            <a href="{% url 'event_detail' favorite.event.pk %}">
+                <div class="card">
+                    {% if favorite.event.image %}
+                        <img src="{{ favorite.event.image.url }}" style="width:100%; height:160px; object-fit:cover; display:block;">
+                    {% else %}
+                        <div style="width:100%; height:160px; background:#f0f0f0; display:flex; align-items:center; justify-content:center; color:#bbb; font-size:14px;">No Image</div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h3>{{ favorite.event.title }}</h3>
+                        <p style="font-size:14px; margin-top:8px;">📅 {{ favorite.event.event_date }}</p>
+                        <p style="font-size:14px;">📍 {{ favorite.event.city }}</p>
+                    </div>
+                </div>
+            </a>
+        {% empty %}
+            <p>You haven't saved any events yet.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

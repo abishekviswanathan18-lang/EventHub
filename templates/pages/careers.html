@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Careers - EventHub{% endblock %}
+
+{% block content %}
+    <div style="background:linear-gradient(135deg,#0f172a,#064e3b,#059669); border-radius:20px; padding:60px 40px; text-align:center; color:white;">
+        <h1 style="color:white; font-size:36px;">Join Our Team</h1>
+        <p style="color:#a7f3d0; margin-top:14px; max-width:600px; margin-left:auto; margin-right:auto; font-size:16px;">
+            We're building the future of event discovery — and we're looking for people who care about great experiences.
+        </p>
+    </div>
+
+    <div style="max-width:800px; margin:48px auto 0;">
+        <h2>Open Positions</h2>
+        <div style="display:flex; flex-direction:column; gap:14px; margin-top:20px;">
+            <div class="card" style="padding:22px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                    <div>
+                        <h3>Backend Developer (Django)</h3>
+                        <p style="font-size:13px; color:#888; margin-top:4px;">Full-time &nbsp;•&nbsp; Chennai / Remote</p>
+                    </div>
+                    <span class="badge badge-success">Hiring</span>
+                </div>
+            </div>
+            <div class="card" style="padding:22px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                    <div>
+                        <h3>Frontend Developer</h3>
+                        <p style="font-size:13px; color:#888; margin-top:4px;">Full-time &nbsp;•&nbsp; Remote</p>
+                    </div>
+                    <span class="badge badge-success">Hiring</span>
+                </div>
+            </div>
+            <div class="card" style="padding:22px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                    <div>
+                        <h3>Customer Support Associate</h3>
+                        <p style="font-size:13px; color:#888; margin-top:4px;">Part-time &nbsp;•&nbsp; Remote</p>
+                    </div>
+                    <span class="badge" style="background:#fef3c7; color:#92400e;">Opening Soon</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top:32px; padding:32px; text-align:center; background:#f0fdf9;">
+            <h2>Don't see your role?</h2>
+            <p style="margin-top:8px; color:#666;">We're always excited to meet talented people. Reach out anyway.</p>
+            <a href="{% url 'contact' %}" class="btn btn-primary" style="margin-top:16px; display:inline-block;">Get in Touch</a>
+        </div>
+    </div>
+{% endblock %}

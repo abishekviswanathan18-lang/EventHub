@@ -1,0 +1,133 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}EventHub{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    <nav>
+        <div class="nav-left">
+            <a href="{% url 'home' %}" class="logo">EventHub</a>
+            <div class="nav-links">
+                <a href="{% url 'event_list' %}">Events</a>
+            </div>
+        </div>
+        <div class="nav-links" style="display:flex; align-items:center;">
+            {% if user.is_authenticated %}
+            <span class="user-info">Hi, {{ user.username }} ({{ user.role }})</span>
+            {% if user.role == 'ORGANIZER' %}
+            <a href="{% url 'organizer_dashboard' %}">Dashboard</a>
+            <a href="{% url 'organizer_bookings' %}">Manage Bookings</a>
+            <a href="{% url 'contact_messages' %}">Messages</a>
+            {% else %}
+            <a href="{% url 'my_bookings' %}">My Bookings</a>
+            <a href="{% url 'my_favorites' %}">Favorites</a>
+            {% endif %}
+
+            <a href="{% url 'logout' %}">Logout</a>
+            {% else %}
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}" class="btn btn-primary"
+                style="margin-left:20px; padding:8px 18px;">Register</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container">
+        {% if messages %}
+        <div id="toast-container"
+            style="position:fixed; top:20px; right:20px; z-index:200; display:flex; flex-direction:column; gap:10px;">
+            {% for message in messages %}
+            <div class="toast {{ message.tags }}" style="padding:14px 20px; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.15); font-size:14px; font-weight:600; min-width:240px; animation: slideIn 0.3s ease;
+                {% if message.tags == 'success' %} background:#059669; color:white;
+                {% elif message.tags == 'error' %} background:#dc2626; color:white;
+                {% else %} background:#1a1a1a; color:white; {% endif %}">
+                {% if message.tags == 'success' %}✓{% elif message.tags == 'error' %}✕{% else %}ℹ{% endif %}
+                &nbsp; {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+
+        <style>
+            @keyframes slideIn {
+                from {
+                    opacity: 0;
+                    transform: translateX(40px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+
+            @keyframes fadeOut {
+                from {
+                    opacity: 1;
+                }
+
+                to {
+                    opacity: 0;
+                }
+            }
+        </style>
+
+        <script>
+            setTimeout(function () {
+                const toasts = document.getElementById('toast-container');
+                if (toasts) {
+                    toasts.style.animation = 'fadeOut 0.4s ease forwards';
+                    setTimeout(() => toasts.remove(), 400);
+                }
+            }, 3000);
+        </script>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer style="background:#0f172a; color:#94a3b8; padding:50px 24px 24px; margin-top:80px; text-align:left;">
+        <div style="max-width:1100px; margin:0 auto; display:grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap:32px;">
+            <div>
+                <p style="color:white; font-size:20px; font-weight:800;">EventHub</p>
+                <p style="margin-top:10px; font-size:13px; line-height:1.7;">India's fastest growing platform for
+                    discovering, booking, and hosting unforgettable events — from tech meetups to music festivals.</p>
+            </div>
+            <div>
+                <p style="color:white; font-weight:700; font-size:14px;">Explore</p>
+                <div style="margin-top:12px; display:flex; flex-direction:column; gap:8px; font-size:13px;">
+                    <a href="{% url 'event_list' %}" style="color:#94a3b8;">Browse Events</a>
+                    <a href="{% url 'home' %}" style="color:#94a3b8;">Categories</a>
+                    <a href="{% url 'register' %}" style="color:#94a3b8;">Become an Organizer</a>
+                </div>
+            </div>
+            <div>
+                <p style="color:white; font-weight:700; font-size:14px;">Company</p>
+                <div style="margin-top:12px; display:flex; flex-direction:column; gap:8px; font-size:13px;">
+                    <a href="{% url 'about' %}" style="color:#94a3b8;">About Us</a>
+                    <a href="{% url 'contact' %}" style="color:#94a3b8;">Contact</a>
+                    <a href="{% url 'careers' %}" style="color:#94a3b8;">Careers</a>
+                </div>
+            </div>
+            <div>
+                <p style="color:white; font-weight:700; font-size:14px;">Follow Us</p>
+                <div style="margin-top:12px; display:flex; gap:12px; font-size:18px;">
+                    <span>📘</span><span>📷</span><span>🐦</span><span>💼</span>
+                </div>
+            </div>
+        </div>
+        <div
+            style="max-width:1100px; margin:36px auto 0; padding-top:20px; border-top:1px solid #1e293b; font-size:12px; text-align:center;">
+            &copy; 2026 EventHub. Built with Django. All rights reserved.
+        </div>
+    </footer>
+
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Cancel Booking - EventHub{% endblock %}
+
+{% block content %}
+    <div style="max-width:450px; margin:0 auto; background:white; border-radius:10px; padding:30px; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+        <h2>Cancel this booking?</h2>
+        <p style="margin:15px 0; color:#555;">
+            <strong>{{ booking.event.title }}</strong><br>
+            📅 {{ booking.event.event_date }} &nbsp; 🕐 {{ booking.event.start_time }}
+        </p>
+        <p style="color:#dc2626; margin-bottom:20px;">
+            This will release your tickets back for others to book and cannot be undone.
+        </p>
+
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" style="background:#dc2626; color:white; padding:10px 20px; border:none; border-radius:4px; cursor:pointer;">
+                Yes, Cancel Booking
+            </button>
+            <a href="{% url 'booking_detail' booking.pk %}" style="margin-left:15px; color:#1f2937;">Never mind, go back</a>
+        </form>
+    </div>
+{% endblock %}

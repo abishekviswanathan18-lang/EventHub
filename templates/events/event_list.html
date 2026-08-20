@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% block title %}Browse Events - EventHub{% endblock %}
+
+{% block content %}
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+        <h1>Browse Events</h1>
+        {% if user.is_authenticated and user.role == 'ORGANIZER' %}
+            <a href="{% url 'event_create' %}" class="btn btn-primary">+ Create Event</a>
+        {% endif %}
+    </div>
+
+    <form method="GET" class="card" style="margin: 24px 0; padding:14px 18px; overflow: visible;">
+    <div style="display: flex; gap: 12px; flex-wrap:wrap; align-items:center;">
+        <div style="flex:1; min-width:220px; position:relative;">
+            <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#aaa; font-size:15px;">🔍</span>
+            <input type="text" id="search-input" name="q" placeholder="Search events, venues, cities..." value="{{ request.GET.q }}" autocomplete="off" style="width:100%; padding:12px 12px 12px 38px; border:none; background:#f7f7f7; border-radius:8px;">
+            <div id="search-suggestions" style="position:absolute; top:calc(100% + 6px); left:0; right:0; background:white; border-radius:8px; box-shadow:0 4px 14px rgba(0,0,0,0.12); z-index:20; display:none; overflow:hidden;"></div>
+        </div>
+        <select name="category" style="width:auto; min-width:150px; border:none; background:#f7f7f7; padding:12px;">
+            <option value="">All Categories</option>
+            {% for cat in categories %}
+                <option value="{{ cat.id }}" {% if request.GET.category == cat.id|stringformat:"s" %}selected{% endif %}>
+                    {{ cat.name }}
+                </option>
+            {% endfor %}
+        </select>
+        <button type="button" onclick="document.getElementById('advanced-filters').classList.toggle('filters-open')" class="btn btn-outline" style="padding:12px 18px;">
+            ⚙️ Filters
+        </button>
+        <button type="submit" class="btn btn-primary" style="padding:12px 26px;">Search</button>
+    </div>
+
+    <div id="advanced-filters" class="advanced-filters-panel" style="margin-top:16px; padding-top:16px; border-top:1px solid #eee; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap:14px;">
+        <div>
+            <label style="font-size:13px; color:#666; display:block; margin-bottom:4px;">📍 Location</label>
+            <select name="city" style="width:100%; border:1px solid #ddd; padding:10px;">
+                <option value="">All Cities</option>
+                {% for c in cities %}
+                    <option value="{{ c }}" {% if request.GET.city == c %}selected{% endif %}>{{ c }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label style="font-size:13px; color:#666; display:block; margin-bottom:4px;">💰 Min Price (₹)</label>
+            <input type="number" name="min_price" value="{{ request.GET.min_price }}" placeholder="0" style="width:100%; border:1px solid #ddd; padding:10px;">
+        </div>
+        <div>
+            <label style="font-size:13px; color:#666; display:block; margin-bottom:4px;">💰 Max Price (₹)</label>
+            <input type="number" name="max_price" value="{{ request.GET.max_price }}" placeholder="Any" style="width:100%; border:1px solid #ddd; padding:10px;">
+        </div>
+        <div>
+            <label style="font-size:13px; color:#666; display:block; margin-bottom:4px;">📅 From Date</label>
+            <input type="date" name="date_from" value="{{ request.GET.date_from }}" style="width:100%; border:1px solid #ddd; padding:10px;">
+        </div>
+        <div>
+            <label style="font-size:13px; color:#666; display:block; margin-bottom:4px;">📅 To Date</label>
+            <input type="date" name="date_to" value="{{ request.GET.date_to }}" style="width:100%; border:1px solid #ddd; padding:10px;">
+        </div>
+        <div style="display:flex; align-items:flex-end;">
+            <a href="{% url 'event_list' %}" class="btn btn-outline" style="width:100%; text-align:center; padding:10px;">✕ Clear All Filters</a>
+        </div>
+    </div>
+</form>
+
+<style>
+    .advanced-filters-panel { display: none; }
+    .advanced-filters-panel.filters-open { display: grid; }
+</style>
+
+    <p style="color:#888; font-size:14px; margin-top:20px;">{{ page_obj.paginator.count }} event{{ page_obj.paginator.count|pluralize }} found</p>
+
+<div class="card-grid" style="margin-top:14px;">
+    {% for event in page_obj %}
+        <a href="{% url 'event_detail' event.pk %}">
+            <div class="card">
+                {% if event.image %}
+                    <img src="{{ event.image.url }}" style="width:100%; height:170px; object-fit:cover; object-position:center top; display:block;">
+                {% else %}
+                    <div style="width:100%; height:170px; background:linear-gradient(135deg,#e0f2f1,#f0fdf9); display:flex; align-items:center; justify-content:center; color:#059669; font-size:32px;">🎫</div>
+                {% endif %}
+                <div class="card-body">
+                    {% if event.category %}
+                        <span style="font-size:11px; font-weight:700; color:#059669; text-transform:uppercase; letter-spacing:0.4px;">{{ event.category.name }}</span>
+                    {% endif %}
+                    <h3 style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:4px;">{{ event.title }}</h3>
+                    <p style="font-size:13px; margin-top:8px; color:#888;">📅 {{ event.event_date }}</p>
+                    <p style="font-size:13px; color:#888;">📍 {{ event.city }}</p>
+                </div>
+            </div>
+        </a>
+    {% empty %}
+        <div style="text-align:center; padding:60px 20px; grid-column:1/-1;">
+            <div style="font-size:48px;">🔍</div>
+            <p style="margin-top:12px; color:#888;">No events found. Try a different search or filter.</p>
+        </div>
+    {% endfor %}
+</div>
+
+    {% if page_obj.has_other_pages %}
+        <div style="display:flex; justify-content:center; gap:10px; margin-top:32px;">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" class="btn btn-outline">← Previous</a>
+            {% endif %}
+
+            <span style="padding:10px 16px; color:#666; font-size:14px;">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" class="btn btn-outline">Next →</a>
+            {% endif %}
+        </div>
+    {% endif %}
+
+<script>
+const searchInput = document.getElementById('search-input');
+const suggestionsBox = document.getElementById('search-suggestions');
+let debounceTimer;
+
+searchInput.addEventListener('input', function() {
+    clearTimeout(debounceTimer);
+    const query = this.value.trim();
+
+    if (query.length < 2) {
+        suggestionsBox.style.display = 'none';
+        return;
+    }
+
+    debounceTimer = setTimeout(() => {
+        fetch(`/events/search-suggestions/?q=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.results.length === 0) {
+                    suggestionsBox.style.display = 'none';
+                    return;
+                }
+                suggestionsBox.innerHTML = data.results.map(event => `
+                    <a href="/events/${event.id}/" style="display:block; padding:12px 16px; border-bottom:1px solid #f0f0f0; color:#1a1a1a; font-size:14px;">
+                        <strong>${event.title}</strong>
+                        <span style="color:#999; font-size:13px;"> — ${event.city}</span>
+                    </a>
+                `).join('');
+                suggestionsBox.style.display = 'block';
+            });
+    }, 250);
+});
+
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('#search-input') && !e.target.closest('#search-suggestions')) {
+        suggestionsBox.style.display = 'none';
+    }
+});
+</script>
+{% endblock %}
